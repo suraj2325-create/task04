@@ -1,0 +1,39 @@
+# 📦 Install PuLP if not already installed
+# !pip install pulp
+
+from pulp import *
+
+# -----------------------------
+# 🔧 Define Decision Variables
+# -----------------------------
+x = LpVariable("Product_A", lowBound=0, cat='Continuous')  # Units of Product A
+y = LpVariable("Product_B", lowBound=0, cat='Continuous')  # Units of Product B
+
+# -----------------------------
+# 🎯 Define Problem
+# -----------------------------
+model = LpProblem("Maximize_Profit", LpMaximize)
+
+# -----------------------------
+# 💰 Objective Function
+# -----------------------------
+model += 40 * x + 50 * y, "Total_Profit"
+
+# -----------------------------
+# 📏 Constraints
+# -----------------------------
+model += 2 * x + 3 * y <= 100, "Labor_Constraint"
+model += 3 * x + 2 * y <= 90,  "Material_Constraint"
+
+# -----------------------------
+# 🧠 Solve the Problem
+# -----------------------------
+model.solve()
+
+# -----------------------------
+# 📊 Results
+# -----------------------------
+print("Status:", LpStatus[model.status])
+print("Optimal number of Product A to produce:", x.varValue)
+print("Optimal number of Product B to produce:", y.varValue)
+print("Maximum Profit: ₹", value(model.objective))
